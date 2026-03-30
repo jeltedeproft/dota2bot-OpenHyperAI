@@ -14,7 +14,8 @@
       "Bash(node scripts/validate-heroes.js)",
       "Bash(node scripts/install-hooks.js)",
       "Bash(node scripts/fix-hero-duplicates.js)",
-      "Bash(bash .git/hooks/pre-commit)"
+      "Bash(bash .git/hooks/pre-commit)",
+      "Bash(python3:*)"
     ]
   }
 }
