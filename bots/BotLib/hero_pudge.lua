@@ -142,7 +142,6 @@ sRoleItemsBuyList['pos_1'] = {
 
     "item_bracer",
     "item_magic_wand",
-    "item_bracer",
     "item_boots",
     "item_kaya_and_sange",--
     "item_ultimate_scepter",

@@ -39,7 +39,6 @@ sRoleItemsBuyList['pos_3'] = {
 	"item_tango",
 	"item_double_branches",
 	"item_circlet",
-	"item_circlet",
 	"item_quelling_blade",
 
 	"item_magic_wand",

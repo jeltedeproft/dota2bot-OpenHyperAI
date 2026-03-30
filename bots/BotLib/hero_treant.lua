@@ -41,7 +41,6 @@ sRoleItemsBuyList['pos_4'] = {
     -- "item_ultimate_scepter_2",
     "item_ultimate_scepter",
     "item_overwhelming_blink",--
-    "item_ultimate_scepter_2",
     "item_moon_shard",
 }
 

@@ -3,8 +3,14 @@
  * validate-heroes.js
  *
  * Validates all bots/BotLib/hero_*.lua files for common issues:
- *   1. Duplicate items in sSellList
- *   2. Duplicate items in sBuyList (per-role)
+ *   1. Duplicate items in sRoleItemsBuyList (per-role buy lists)
+ *   2. Odd-length sSellList (unpaired entry — last item has no sell partner)
+ *
+ * NOTE: sSellList uses a PAIRED format:
+ *   [buy_item1, sell_item1, buy_item2, sell_item2, ...]
+ *   "When I have buy_itemN in my inventory, sell sell_itemN."
+ *   The same sell_item validly appears multiple times (one per buy trigger).
+ *   We do NOT check for duplicate sell items. We only check the list is even-length.
  *
  * Run locally:  node scripts/validate-heroes.js
  * Run in CI:    automatically via .github/workflows/validate.yml
@@ -30,7 +36,6 @@ function extractItemsFromBlock(src, startIdx) {
     const openBrace = src.indexOf('{', startIdx);
     if (openBrace === -1) return { items: [], endIdx: startIdx };
 
-    // Walk to the matching closing brace (handles 1 level of nesting)
     let depth = 0;
     let i = openBrace;
     while (i < src.length) {
@@ -64,21 +69,27 @@ for (const file of files) {
     const src = fs.readFileSync(path.join(HERO_DIR, file), 'utf8');
     const errors = [];
 
-    // --- 1. Check sSellList for duplicates ---
+    // --- 1. Check sSellList is even-length (paired format) ---
     const sellListIdx = src.search(/X\[['"]sSellList['"]\]\s*=/);
     if (sellListIdx !== -1) {
         const { items } = extractItemsFromBlock(src, sellListIdx);
-        const dupes = findDuplicates(items);
-        for (const d of dupes) {
-            errors.push(`sSellList: duplicate item "${d}"`);
+        if (items.length % 2 !== 0) {
+            errors.push(`sSellList: odd number of items (${items.length}) — last entry has no pair`);
         }
     }
 
-    // --- 2. Check each sRoleItemsBuyList['pos_N'] for duplicates ---
+    // --- 2. Check each sRoleItemsBuyList['pos_N'] for duplicate items ---
+    // Skip alias lines like: sRoleItemsBuyList['pos_1'] = sRoleItemsBuyList['pos_3']
+    // These contain no '{' and would otherwise accidentally pick up the next block's brace.
     const buyListPattern = /sRoleItemsBuyList\[['"][^'"]+['"]\]\s*=/g;
     let match;
     while ((match = buyListPattern.exec(src)) !== null) {
-        const roleName = (src.slice(match.index, match.index + 60).match(/\[['"]([^'"]+)['"]\]/) || [])[1];
+        // Find end of this line to check if '{' is present before the newline
+        const lineEnd = src.indexOf('\n', match.index);
+        const lineContent = src.slice(match.index, lineEnd === -1 ? undefined : lineEnd);
+        if (!lineContent.includes('{')) continue; // alias line, not a literal block
+
+        const roleName = (lineContent.match(/\[['"]([^'"]+)['"]\]/) || [])[1];
         const { items } = extractItemsFromBlock(src, match.index);
         const dupes = findDuplicates(items);
         for (const d of dupes) {

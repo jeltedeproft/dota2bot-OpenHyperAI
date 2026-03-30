@@ -42,7 +42,6 @@ sRoleItemsBuyList['pos_4'] = {
     "item_wind_waker",--
     -- "item_ultimate_scepter_2",
     "item_overwhelming_blink",--
-    "item_ultimate_scepter_2",
     "item_moon_shard",
 }
 
@@ -65,7 +64,6 @@ sRoleItemsBuyList['pos_5'] = {
 	"item_gungir",--
     -- "item_ultimate_scepter_2",
     "item_overwhelming_blink",--
-    "item_ultimate_scepter_2",
     "item_moon_shard",
 }
 

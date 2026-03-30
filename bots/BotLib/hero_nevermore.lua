@@ -71,7 +71,6 @@ sRoleItemsBuyList['pos_2'] = {
 	"item_double_branches",
 	"item_faerie_fire",
 	"item_enchanted_mango",
-	"item_enchanted_mango",
 
 	"item_bottle",
 	"item_magic_wand",
@@ -93,7 +92,6 @@ sRoleItemsBuyList['pos_2'] = {
 
 sRoleItemsBuyList['pos_4'] = {
 	"item_tango",
-	"item_tango",
 	"item_double_branches",
 	"item_clarity",
 
@@ -114,7 +112,6 @@ sRoleItemsBuyList['pos_4'] = {
 }
 
 sRoleItemsBuyList['pos_5'] = {
-	"item_tango",
 	"item_tango",
 	"item_double_branches",
 	"item_clarity",

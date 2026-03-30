@@ -35,7 +35,6 @@ local sRoleItemsBuyList = {}
 
 sRoleItemsBuyList['pos_4'] = {
 	"item_tango",
-	"item_tango",
 	"item_double_branches",
 	"item_faerie_fire",
 	"item_blood_grenade",
@@ -56,7 +55,6 @@ sRoleItemsBuyList['pos_4'] = {
 }
 
 sRoleItemsBuyList['pos_5'] = {
-	"item_tango",
 	"item_tango",
 	"item_double_branches",
 	"item_faerie_fire",
@@ -104,7 +102,6 @@ sRoleItemsBuyList['pos_2'] = {
 	"item_bottle",
 	'item_null_talisman',
 	"item_magic_wand",
-	'item_null_talisman',
 	"item_arcane_boots",
 	"item_rod_of_atos",
 --	"item_glimmer_cape",

@@ -47,7 +47,6 @@ sRoleItemsBuyList['pos_4'] = {
 
 sRoleItemsBuyList['pos_5'] = {
 	"item_tango",
-	"item_tango",
 	"item_double_branches",
 	"item_enchanted_mango",
 	"item_blood_grenade",

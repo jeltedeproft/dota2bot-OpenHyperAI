@@ -35,7 +35,6 @@ local sRoleItemsBuyList = {}
 
 sRoleItemsBuyList['pos_4'] = {
 	"item_tango",
-	"item_tango",
 	"item_enchanted_mango",
 	"item_double_branches",
 	"item_blood_grenade",
@@ -78,7 +77,6 @@ sRoleItemsBuyList['pos_5'] = {
 }
 
 sRoleItemsBuyList['pos_3'] = {
-	"item_tango",
 	"item_tango",
 	"item_enchanted_mango",
 	"item_double_branches",

@@ -39,7 +39,6 @@ sRoleItemsBuyList['pos_1'] = {
     "item_kaya",
     "item_dagon_2",
 	"item_rod_of_atos",
-	"item_glimmer_cape",
 	"item_kaya_and_sange",--
 	"item_force_staff",
 	"item_dagon_5",--

@@ -57,7 +57,6 @@ sRoleItemsBuyList['pos_2'] = {
 	"item_double_branches",
 	"item_faerie_fire",
 	"item_circlet",
-	"item_circlet",
 
 	"item_magic_wand",
 	"item_bracer",

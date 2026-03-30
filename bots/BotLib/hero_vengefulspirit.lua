@@ -41,7 +41,6 @@ sRoleItemsBuyList['pos_4'] = {
     "item_aghanims_shard",
     "item_force_staff",
     "item_lotus_orb",--
-    "item_aghanims_shard",
     "item_hurricane_pike",--
     "item_moon_shard",
     "item_ultimate_scepter_2",
@@ -50,9 +49,7 @@ sRoleItemsBuyList['pos_4'] = {
 
 sRoleItemsBuyList['pos_5'] = {
 	"item_tango",
-	"item_tango",
 	"item_double_branches",
-	"item_enchanted_mango",
 	"item_enchanted_mango",
 	"item_blood_grenade",
 

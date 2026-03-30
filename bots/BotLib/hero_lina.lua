@@ -73,7 +73,6 @@ sRoleItemsBuyList['pos_2'] = {
 
 	'item_null_talisman',
     "item_bottle",
-	'item_null_talisman',
     "item_magic_wand",
     "item_boots",
 

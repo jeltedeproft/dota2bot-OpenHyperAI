@@ -69,7 +69,6 @@ sRoleItemsBuyList['pos_2'] = {
 	"item_dragon_lance",
     "item_desolator",--
     "item_orchid",
-    "item_dragon_lance",
     "item_aghanims_shard",
     "item_black_king_bar",--
     "item_bloodthorn",--

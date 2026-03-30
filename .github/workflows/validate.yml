@@ -21,7 +21,8 @@ jobs:
               run: npm ci
 
             - name: Check Prettier formatting
-              run: npx prettier ./bots ./typescript --check
+              # Prettier has no Lua parser — only check TypeScript sources
+              run: npx prettier ./typescript --check
 
             - name: Validate hero files
               run: node scripts/validate-heroes.js
