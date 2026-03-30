@@ -1,0 +1,126 @@
+name: Patch Detection
+
+on:
+    schedule:
+        - cron: '0 10 * * 1' # Every Monday at 10am UTC
+    workflow_dispatch: # Allow manual trigger
+
+jobs:
+    check-patch:
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Check for new Dota 2 patch
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const fs = require('fs');
+
+                      // --- Read current version from PATCH_UPDATE_GUIDE.md ---
+                      const guide = fs.readFileSync('docs/PATCH_UPDATE_GUIDE.md', 'utf8');
+                      const currentMatch = guide.match(/\*\*Last updated for:\*\* Patch ([\d.a-z]+)/i);
+                      if (!currentMatch) {
+                        core.setFailed('Could not find "Last updated for" in docs/PATCH_UPDATE_GUIDE.md');
+                        return;
+                      }
+                      const currentVersion = currentMatch[1];
+                      console.log(`Bot scripts currently at: ${currentVersion}`);
+
+                      // --- Fetch latest patch from Valve API ---
+                      let data;
+                      try {
+                        const res = await fetch('https://www.dota2.com/datafeed/patchnoteslist?language=english');
+                        data = await res.json();
+                      } catch (e) {
+                        core.setFailed(`Failed to fetch patch list: ${e.message}`);
+                        return;
+                      }
+
+                      // Valve wraps in { result: { patches: [...] } }
+                      const patches = data?.result?.patches ?? data?.patches ?? [];
+                      if (!patches.length) {
+                        core.setFailed(`Unexpected API response shape: ${JSON.stringify(data).slice(0, 200)}`);
+                        return;
+                      }
+
+                      const latestPatch = patches[patches.length - 1];
+                      const latestVersion = latestPatch?.patch_number ?? latestPatch?.version ?? latestPatch?.name;
+                      if (!latestVersion) {
+                        core.setFailed(`Could not parse patch version from: ${JSON.stringify(latestPatch)}`);
+                        return;
+                      }
+                      console.log(`Latest Dota 2 patch: ${latestVersion}`);
+
+                      if (latestVersion === currentVersion) {
+                        console.log('Bot scripts are up to date!');
+                        return;
+                      }
+
+                      // --- Ensure the patch-update label exists ---
+                      try {
+                        await github.rest.issues.createLabel({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          name: 'patch-update',
+                          color: 'e4e669',
+                          description: 'New Dota 2 patch requires bot script updates',
+                        });
+                      } catch (_) {
+                        // Label already exists — ignore
+                      }
+
+                      // --- Check if we already filed an issue for this patch ---
+                      const existing = await github.rest.issues.listForRepo({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        labels: 'patch-update',
+                        state: 'open',
+                      });
+                      if (existing.data.some(i => i.title.includes(latestVersion))) {
+                        console.log(`Issue already open for patch ${latestVersion}.`);
+                        return;
+                      }
+
+                      // --- Open a new issue ---
+                      const body = [
+                        `## New Dota 2 Patch Detected: ${latestVersion}`,
+                        '',
+                        `The bot scripts are currently updated for **Patch ${currentVersion}**, but Valve has released **Patch ${latestVersion}**.`,
+                        '',
+                        '## Update Steps',
+                        '',
+                        'Follow the runbook in `docs/PATCH_UPDATE_GUIDE.md`. Quick reference:',
+                        '',
+                        '```',
+                        `1. Fetch patch notes + d2vpkr data       (parallel)`,
+                        `2. Diff items: added/removed/changed`,
+                        `3. Update aba_item.lua`,
+                        `4. Update hero item builds`,
+                        `5. Handle ability renames/reworks`,
+                        `6. Update neutral items (Buff/ AND FretBots/)`,
+                        `7. Add active-use logic for new items`,
+                        `8. Verify & commit`,
+                        '```',
+                        '',
+                        '### Quick Links',
+                        `- [Patch Notes API](https://www.dota2.com/datafeed/patchnotes?version=${latestVersion}&language=english)`,
+                        `- [Human-readable Patch Page](https://www.dota2.com/patches/${latestVersion})`,
+                        '- [d2vpkr shops.txt](https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/scripts/shops.txt)',
+                        '- [d2vpkr neutral_items.txt](https://raw.githubusercontent.com/dotabuff/d2vpkr/master/dota/scripts/npc/neutral_items.txt)',
+                        '',
+                        '> **Tip:** Give an AI assistant the prompt in `docs/PATCH_UPDATE_GUIDE.md` → "Processing a New Patch" to automate most of this.',
+                      ].join('\n');
+
+                      const issue = await github.rest.issues.create({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        title: `Update bot scripts for Dota 2 Patch ${latestVersion}`,
+                        labels: ['patch-update'],
+                        body,
+                      });
+
+                      console.log(`Created issue #${issue.data.number}: ${issue.data.html_url}`);
