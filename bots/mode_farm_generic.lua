@@ -250,7 +250,7 @@ function GetDesireHelper()
                     or (botActiveMode == BOT_MODE_ITEM)
                     then
 						if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp) end
-                        return RemapValClamped(J.GetHP(bot), 0.2, 0.7, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_ABSOLUTE)
+                        return RemapValClamped(J.GetHP(bot), 0.2, 0.7, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_VERYHIGH)
 					end
                 end
             end
@@ -271,7 +271,7 @@ function GetDesireHelper()
                     or (botActiveMode == BOT_MODE_ITEM)
                     then
 						if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp) end
-                        return RemapValClamped(J.GetHP(bot), 0.2, 0.7, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_ABSOLUTE)
+                        return RemapValClamped(J.GetHP(bot), 0.2, 0.7, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_VERYHIGH)
                     end
                 end
             end
@@ -329,7 +329,7 @@ function GetDesireHelper()
     local hItem = J.IsItemAvailable('item_hand_of_midas')
     if J.IsInAllyArea(bot) and J.CanCastAbility(hItem) then
         if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp) end;
-        return RemapValClamped(J.GetHP(bot), 0.2, 0.7, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_ABSOLUTE)
+        return RemapValClamped(J.GetHP(bot), 0.2, 0.7, BOT_MODE_DESIRE_MODERATE, BOT_MODE_DESIRE_VERYHIGH)
     end
 
 	if J.IsDefending(bot) and botActiveModeDesire >= 0.75 then
@@ -367,7 +367,7 @@ function GetDesireHelper()
 	and not J.IsDefending(bot)
 	and (bot:GetUnitName() ~= 'npc_dota_hero_lone_druid_bear' or (bot:HasScepter() and not J.IsValid(LoneDruid.hero)))
 	and (DotaTime() > 8 * 60 or bot:GetLevel() >= 8 or ( bot:GetAttackRange() < 220 and bot:GetLevel() >= 6 ))
-	and networthAdvantage < 10000
+	and networthAdvantage < 6000
 	and not J.IsLateGame()
 	then
 		if J.GetDistanceFromEnemyFountain(bot) > 4000 
@@ -384,7 +384,7 @@ function GetDesireHelper()
 		if #hLaneCreepList > 0 
 		then
 			bot.farmLocation = J.GetCenterOfUnits(hLaneCreepList)
-			return RemapValClamped(J.GetHP(bot), 0.2, 0.7, 0.4, BOT_MODE_DESIRE_HIGH)
+			return RemapValClamped(J.GetHP(bot), 0.2, 0.7, 0.35, BOT_MODE_DESIRE_MODERATE + 0.05)
 		else
 			if preferedCamp == nil then preferedCamp = J.Site.GetClosestNeutralSpwan(bot, availableCamp);end
 			
@@ -398,11 +398,11 @@ function GetDesireHelper()
 						return BOT_MODE_DESIRE_VERYLOW;
 				elseif farmState == FARM_STATE_FARM
 					then 
-						return BOT_MODE_DESIRE_ABSOLUTE *0.89;
+						return BOT_MODE_DESIRE_VERYHIGH * 0.85;
 				else
 					local farmDistance = GetUnitToLocationDistance(bot,preferedCamp.cattr.location);
 					bot.farmLocation = preferedCamp.cattr.location
-					return RemapValClamped(J.GetHP(bot), 0.2, 0.7, 0.4, BOT_MODE_DESIRE_VERYHIGH);
+					return RemapValClamped(J.GetHP(bot), 0.2, 0.7, 0.35, BOT_MODE_DESIRE_HIGH);
 				end
 			end
 		end
