@@ -36,6 +36,9 @@ J.Utils = require( GetScriptDirectory()..'/FunLib/utils' )
 J.Customize = require(GetScriptDirectory()..'/FunLib/custom_loader')
 
 
+-- ════════════════════════════════════════════════════
+-- § INITIALIZATION
+-- ════════════════════════════════════════════════════
 function J.SetUserHeroInit( nAbilityBuildList, nTalentBuildList, sBuyList, sSellList )
 	-- A place to change the bot setup.
 	local bot = GetBot()
@@ -80,6 +83,9 @@ function J.GetTalentBuildList( nLocalList )
 	return sTargetList
 end
 
+-- ════════════════════════════════════════════════════
+-- § ACTION STATE & CAST GUARDS
+-- ════════════════════════════════════════════════════
 function J.HasQueuedAction( bot )
 	if bot ~= GetBot()
 	then
@@ -139,6 +145,9 @@ local TempMovableModifierNames = {
 local MovableUndyingModifierRemain = 0
 
 -- check if the target will still have at least one movable undying modifier after nDelay seconds.
+-- ════════════════════════════════════════════════════
+-- § UNIT COUNTING & AREA QUERIES
+-- ════════════════════════════════════════════════════
 function J.HasMovableUndyingModifier(botTarget, nDelay)
     for _, mName in pairs(TempMovableModifierNames)
     do
@@ -324,6 +333,9 @@ function J.GetAoeEnemyHeroLocation( bot, nCastRange, nRadius, nCount )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § TARGET SELECTION & KILL ASSIST
+-- ════════════════════════════════════════════════════
 function J.IsWithoutTarget( bot )
 
 	return bot:CanBeSeen()
@@ -447,6 +459,9 @@ function J.IsOtherAllyCanKillTarget( bot, target )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § NEARBY UNIT LISTS
+-- ════════════════════════════════════════════════════
 function J.GetRetreatingAlliesNearLoc( vLoc, nRadius )
 	-- local cacheKey = 'GetRetreatingAlliesNearLoc'..tostring(nRadius) ..tostring(J.ToNearest500(vLoc.x))..tostring(J.ToNearest500(vLoc.y))
 	-- local cache = J.Utils.GetCachedVars(cacheKey, 0.5)
@@ -560,6 +575,9 @@ function J.GetIllusionsNearLoc(vLoc, nRadius)
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § HERO, ILLUSION & ULTIMATE DETECTION
+-- ════════════════════════════════════════════════════
 function J.IsAllyHeroBetweenAllyAndEnemy( hAlly, hEnemy, vLoc, nRadius )
 
 	local vStart = hAlly:GetLocation()
@@ -847,6 +865,9 @@ function J.IsSuspiciousIllusion( npcTarget )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § CAST VALIDITY & TARGETING FILTERS
+-- ════════════════════════════════════════════════════
 function J.CanCastAbilityOnTarget( npcTarget, bIgnoreMagicImmune )
 
 	return npcTarget:CanBeSeen()
@@ -1063,6 +1084,9 @@ function J.CanCastUnitSpellOnTarget( npcTarget, nDelay )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § KILL PREDICTION
+-- ════════════════════════════════════════════════════
 function J.CanKillTarget( npcTarget, dmg, dmgType )
 	if dmgType == DAMAGE_TYPE_PURE then
 		return dmg >= npcTarget:GetHealth()
@@ -1155,6 +1179,9 @@ function J.WillMagicKillTarget( bot, npcTarget, dmg, nDelay )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § MODIFIER & TARGETING CHECKS
+-- ════════════════════════════════════════════════════
 function J.HasForbiddenModifier( npcTarget )
 
 	for _, mod in pairs( J.Buff['enemy_is_immune'] )
@@ -1291,6 +1318,9 @@ function J.IsTargetedByEnemyWithModifier(tUnits, sModifierName)
     return false
 end
 
+-- ════════════════════════════════════════════════════
+-- § RETREAT & POSITIONING
+-- ════════════════════════════════════════════════════
 function J.ShouldEscape( bot )
 
 	local tableNearbyAttackAllies = J.GetNearbyHeroes(bot, 800, false, BOT_MODE_ATTACK )
@@ -1536,6 +1566,9 @@ function J.IsUnitNearby(bot, tUnits, nRadius, sUnitName, bHero)
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § BOT BEHAVIOR STATE
+-- ════════════════════════════════════════════════════
 function J.IsGoingOnSomeone( bot )
 
 	local mode = bot:GetActiveMode()
@@ -1660,6 +1693,9 @@ function J.IsLaning( bot )
 
 end
 
+-- ════════════════════════════════════════════════════
+-- § ROSHAN, FARMING & ITEM QUERIES
+-- ════════════════════════════════════════════════════
 function J.IsDoingRoshan( bot )
 
 	local mode = bot:GetActiveMode()
@@ -1815,6 +1851,9 @@ function J.IsAllowedToSpam( bot, nManaCost )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § INCOMING PROJECTILE & SPELL DETECTION
+-- ════════════════════════════════════════════════════
 function J.IsAllyUnitSpell( sAbilityName )
 
 	return J.Skill['sAllyUnitAbilityIndex'][sAbilityName] == true
@@ -2031,6 +2070,9 @@ end
 
 
 --以下可少算但不可多算
+-- ════════════════════════════════════════════════════
+-- § ATTACK DAMAGE PREDICTION
+-- ════════════════════════════════════════════════════
 function J.GetAttackProDelayTime( bot, nCreep )
 	if nCreep == nil then
 		print('[ERROR] nil creep target')
@@ -2209,6 +2251,9 @@ function J.GetAttackProjectileDamageByRange( nUnit, nRadius )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § LOCATION UTILITIES & MOVEMENT STATE
+-- ════════════════════════════════════════════════════
 function J.GetCorrectLoc( npcTarget, fDelay )
 
 	local nStability = npcTarget:GetMovementDirectionStability()
@@ -2633,6 +2678,9 @@ function J.GetFaceTowardDistanceLocation( bot, nDistance )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § DEBUG & REPORTING
+-- ════════════════════════════════════════════════════
 function J.SetBotPing( vLoc )
 
 	GetBot():ActionImmediate_Ping( vLoc.x, vLoc.y, false )
@@ -2680,6 +2728,9 @@ function J.SetReportMotive( bDebugFile, sMotive )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § CAST LOCATION UTILITIES
+-- ════════════════════════════════════════════════════
 function J.GetCastLocation( bot, npcTarget, nCastRange, nRadius )
 
 	local nDistance = GetUnitToUnitDistance( bot, npcTarget )
@@ -2750,6 +2801,9 @@ function J.GetTwo( number )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § POWER TREADS & SOUL RING
+-- ════════════════════════════════════════════════════
 function J.SetQueueToInvisible( bot )
 
 	if bot:IsAlive()
@@ -2909,6 +2963,9 @@ function J.ShouldSwitchPTStat( bot, pt )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § UNIT VALIDATION & IDENTITY
+-- ════════════════════════════════════════════════════
 function J.IsOtherAllysTarget( unit )
 
 	local bot = GetBot()
@@ -3055,6 +3112,9 @@ function J.IsAttacking( bot )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § MOVEMENT & CHASE STATE
+-- ════════════════════════════════════════════════════
 function J.IsChasingTarget( bot, nTarget )
 
 	if J.IsRunning( bot )
@@ -3148,6 +3208,9 @@ end
 
 
 
+-- ════════════════════════════════════════════════════
+-- § MODIFIER QUERIES
+-- ════════════════════════════════════════════════════
 function J.GetRemainStunTime( bot )
 
 	if not bot:HasModifier( "modifier_stunned" ) then return 0 end
@@ -3166,6 +3229,9 @@ function J.GetRemainStunTime( bot )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § TEAM FIGHT & LANE DESIRE
+-- ════════════════════════════════════════════════════
 function J.IsTeamActivityCount( bot, nCount )
 
 	local numPlayer = GetTeamPlayers( GetTeam() )
@@ -3440,6 +3506,9 @@ function J.GetClosestAlly(bot, nRadius)
 	return nil
 end
 
+-- ════════════════════════════════════════════════════
+-- § LANE FRONT & ATTACK QUERIES
+-- ════════════════════════════════════════════════════
 function J.GetNearestLaneFrontLocation( nUnitLoc, bEnemy, fDeltaFromFront )
 
 	local nTeam = GetTeam()
@@ -3600,6 +3669,9 @@ function J.GetMP( bot )
 end
 
 
+-- ════════════════════════════════════════════════════
+-- § UNIT LISTS (ALLY / ENEMY / CREEP / BUILDING)
+-- ════════════════════════════════════════════════════
 function J.GetAllyList( bot, nRadius )
 
 	if nRadius > 1600 then nRadius = 1600 end
@@ -3783,6 +3855,9 @@ function J.GetCoresAverageNetworth()
 	return res
 end
 
+-- ════════════════════════════════════════════════════
+-- § ECONOMY & NETWORTH
+-- ════════════════════════════════════════════════════
 function J.GetCoresMaxNetworth()
 	local cacheKey = 'GetCoresMaxNetworth'..tostring(GetTeam())
 	-- local cache = J.Utils.GetCachedVars(cacheKey, 2)
@@ -4072,6 +4147,9 @@ function J.GetLastSeenEnemiesNearLoc(vLoc, nRadius)
 	return enemies
 end
 
+-- ════════════════════════════════════════════════════
+-- § HERO STATISTICS & GAME PHASE
+-- ════════════════════════════════════════════════════
 function J.GetNumOfAliveHeroes( bEnemy )
 	local count = 0
 	local nTeam = GetTeam()
@@ -4187,6 +4265,9 @@ function J.DotProduct(A, B)
 	return A.x * B.x + A.y * B.y + A.z * B.z
 end
 
+-- ════════════════════════════════════════════════════
+-- § ITEM BUILD OPTIMIZATION
+-- ════════════════════════════════════════════════════
 function J.ConsiderForMkbDisassembleMask( bot )
 
 	if bot.maskDismantleDone == nil then bot.maskDismantleDone = false end
@@ -4257,6 +4338,9 @@ end
 
 
 local LastActionTime = {}
+-- ════════════════════════════════════════════════════
+-- § ABILITY TIMING & SPAM
+-- ════════════════════════════════════════════════════
 function J.HasNotActionLast( nCD, nNumber )
 
 	if LastActionTime[nNumber] == nil then LastActionTime[nNumber] = -90 end
@@ -4431,6 +4515,9 @@ function J.GetClosestUnit(units)
 	return target;
 end
 
+-- ════════════════════════════════════════════════════
+-- § GAME MODE & ROLE
+-- ════════════════════════════════════════════════════
 function J.IsModeTurbo()
 	for _, u in pairs(GetUnitList(UNIT_LIST_ALLIES))
 	do
@@ -4513,6 +4600,9 @@ local function GetHealthMultiplier(hUnit)
 	return mul
 end
 
+-- ════════════════════════════════════════════════════
+-- § STRENGTH ASSESSMENT
+-- ════════════════════════════════════════════════════
 function J.WeAreStronger(bot, nRadius)
 	local cacheKey = 'WeAreStronger'..tostring(bot:GetPlayerID())..'-'..tostring(nRadius)
 	local cachedVar = J.Utils.GetCachedVars(cacheKey, 0.5)
@@ -4662,6 +4752,9 @@ function J.GetManaThreshold(bot, nManaCost, hAbilityList)
 	return fManaThreshold
 end
 
+-- ════════════════════════════════════════════════════
+-- § SPECIAL HERO HANDLING (LONE DRUID / MEEPO)
+-- ════════════════════════════════════════════════════
 function J.CheckLoneDruid()
 	local ld = {hero=nil,bear=nil}
 	for _, unit in pairs(GetUnitList(UNIT_LIST_ALL)) do
@@ -4677,6 +4770,9 @@ function J.CheckLoneDruid()
 	return ld
 end
 
+-- ════════════════════════════════════════════════════
+-- § GEOMETRY & VECTOR MATH
+-- ════════════════════════════════════════════════════
 function J.RandomForwardVector(length)
 
     local offset = RandomVector(length)
@@ -4845,6 +4941,9 @@ function J.GetArmorReducers(hero)
 end
 
 local killTime = 0.0
+-- ════════════════════════════════════════════════════
+-- § ROSHAN ASSESSMENT & ALLY CORE QUERIES
+-- ════════════════════════════════════════════════════
 function J.IsRoshanAlive()
 	if GetRoshanKillTime() > killTime
     then
@@ -4971,6 +5070,9 @@ function J.GetStrongestEnemyHero(enemies)
 	return strongestenemy
 end
 
+-- ════════════════════════════════════════════════════
+-- § BETWEEN-UNIT GEOMETRY
+-- ════════════════════════════════════════════════════
 function J.GetDistance(s, t)
     return math.sqrt((s[1] - t[1]) * (s[1]-t[1]) + (s[2] - t[2]) * (s[2] - t[2]))
 end
@@ -5297,6 +5399,9 @@ local sIgnoreAbilityIndex = {
 	["windrunner_windrun"] = true,
 	["witch_doctor_voodoo_restoration"] = true,
 }
+-- ════════════════════════════════════════════════════
+-- § ENEMY ABILITY & UNIT PROPERTY DETECTION
+-- ════════════════════════════════════════════════════
 function J.DidEnemyCastAbility()
 	local bot = GetBot()
 	local nEnemyHeroes = J.GetNearbyHeroes(bot,1200, true, BOT_MODE_NONE)
@@ -5408,6 +5513,9 @@ function J.AdjustLocationWithOffsetTowardsFountain(loc, distance)
 	return J.Utils.GetOffsetLocationTowardsTargetLocation(loc, J.GetTeamFountain(), distance)
 end
 
+-- ════════════════════════════════════════════════════
+-- § LANING PHASE & SPECIAL STRUCTURES
+-- ════════════════════════════════════════════════════
 function J.IsInLaningPhase()
 	return (
 		(J.IsModeTurbo() and DotaTime() < 8 * 60)
@@ -5530,6 +5638,9 @@ function J.IsLocationInArena(loc, radius)
 	return false
 end
 
+-- ════════════════════════════════════════════════════
+-- § MEEPO, CLONE & MODIFIER QUERIES
+-- ════════════════════════════════════════════════════
 function J.GetMeepos()
 	local Meepos = {}
 
@@ -5694,6 +5805,9 @@ end
 
 local hAllyTeamList = {}
 local hEnemyTeamList = {}
+-- ════════════════════════════════════════════════════
+-- § MAP LOCATIONS, NETWORTH & UNIT SEARCH
+-- ════════════════════════════════════════════════════
 function J.GetInventoryNetworth()
 	local allyInventoryNet = 0
 	local enemyInventoryNet = 0
@@ -6178,6 +6292,9 @@ function J.GetETAWithAcceleration(dist, speed, accel)
 	return (math.sqrt(2 * accel * dist + speed * speed) - speed) / accel
 end
 
+-- ════════════════════════════════════════════════════
+-- § TECHIES MINES & POWER TREADS
+-- ════════════════════════════════════════════════════
 function J.GetTechiesMines()
 	local nMinesList = {}
 
@@ -6321,6 +6438,9 @@ local botIdelStateTimeThreshold = 3 -- relatively big number in case it's things
 local deltaIdleDistance = 100
 local botIdleStateTracker = { }
 
+-- ════════════════════════════════════════════════════
+-- § TABLE OPS, BOT STATE & TREE PATHFINDING
+-- ════════════════════════════════════════════════════
 function J.CheckBotIdleState()
 	if DotaTime() <= 0 then return false end
 
@@ -6515,6 +6635,9 @@ function J.GetBestTree(bot, enemyLoc, enemy, nCastRange, hitRadios)
 	return bestTree
 end
 
+-- ════════════════════════════════════════════════════
+-- § ULT LOCATION
+-- ════════════════════════════════════════════════════
 function J.GetUltLoc(bot, target, nManaCost, nCastRange, s)
 	local v = target:GetVelocity()
 	local sv = J.GetDistance(Vector(0,0), v)
