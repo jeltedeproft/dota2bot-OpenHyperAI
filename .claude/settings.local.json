@@ -15,7 +15,9 @@
       "Bash(node scripts/install-hooks.js)",
       "Bash(node scripts/fix-hero-duplicates.js)",
       "Bash(bash .git/hooks/pre-commit)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(wc -l \"C:/Users/Admin/Documents/GitHub/rankedAI/bots/BotLib/hero_\"*.lua)",
+      "Bash(xargs -I{} basename {} .lua)"
     ]
   }
 }
