@@ -1,5 +1,11 @@
 import { BotModeDesire, Unit, UnitType, Vector, BotMode, Team, Tower, Rune, Shop } from "bots/ts_libs/dota";
-import { HasItem, GetLocationToLocationDistance, GetOffsetLocationTowardsTargetLocation, IsModeTurbo, IsValidCreep } from "bots/FunLib/utils";
+import {
+    HasItem,
+    GetLocationToLocationDistance,
+    GetOffsetLocationTowardsTargetLocation,
+    IsModeTurbo,
+    IsValidCreep,
+} from "bots/FunLib/utils";
 
 const visionRad = 2000; //--假眼查重范围
 const trueSightRad = 1000; //--真眼查重范围
@@ -111,7 +117,19 @@ for (const v of allUnitList) {
 
 export const nWatchTowerList = [nWatchTower_1, nWatchTower_2];
 
-export const nTowerList = [Tower.Top1, Tower.Mid1, Tower.Bot1, Tower.Top2, Tower.Mid2, Tower.Bot2, Tower.Top3, Tower.Mid3, Tower.Bot3, Tower.Base1, Tower.Base2];
+export const nTowerList = [
+    Tower.Top1,
+    Tower.Mid1,
+    Tower.Bot1,
+    Tower.Top2,
+    Tower.Mid2,
+    Tower.Bot2,
+    Tower.Top3,
+    Tower.Mid3,
+    Tower.Bot3,
+    Tower.Base1,
+    Tower.Base2,
+];
 
 export const nRuneList = [
     Rune.Power1, //--上
@@ -190,7 +208,12 @@ export const GetWardSpotWhenTowerFall = function (): Vector[] {
 };
 export const GetAggressiveSpot = function (): Vector[] {
     const AggressiveDire = [DIRE_AGGRESSIVETOP, DIRE_AGGRESSIVEMID1, DIRE_AGGRESSIVEMID2, DIRE_AGGRESSIVEBOT];
-    const AggressiveRadiant = [RADIANT_AGGRESSIVETOP, RADIANT_AGGRESSIVEMID1, RADIANT_AGGRESSIVEMID2, RADIANT_AGGRESSIVEBOT];
+    const AggressiveRadiant = [
+        RADIANT_AGGRESSIVETOP,
+        RADIANT_AGGRESSIVEMID1,
+        RADIANT_AGGRESSIVEMID2,
+        RADIANT_AGGRESSIVEBOT,
+    ];
 
     return GetTeam() === Team.Radiant ? AggressiveRadiant : AggressiveDire;
 };
@@ -198,7 +221,12 @@ export const GetAggressiveSpot = function (): Vector[] {
 export const GetItemWard = function (bot: Unit): any | null {
     for (let i = 0; i < 9; i++) {
         const item = bot.GetItemInSlot(i);
-        if (item && (item.GetName() === "item_ward_observer" || item.GetName() === "item_ward_sentry" || item.GetName() === "item_ward_dispenser")) {
+        if (
+            item &&
+            (item.GetName() === "item_ward_observer" ||
+                item.GetName() === "item_ward_sentry" ||
+                item.GetName() === "item_ward_dispenser")
+        ) {
             return item;
         }
     }
@@ -324,7 +352,12 @@ export const RefreshCamp = function (bot: Unit): LuaMultiReturn<[any[], number]>
 
     for (const aCamp of Object.values(camps)) {
         const camp = aCamp as any;
-        if ((botLevel <= 7 || bot.GetAttackDamage() <= 80) && !IsEnemyCamp(camp) && !IsLargeCamp(camp) && !IsAncientCamp(camp)) {
+        if (
+            (botLevel <= 7 || bot.GetAttackDamage() <= 80) &&
+            !IsEnemyCamp(camp) &&
+            !IsLargeCamp(camp) &&
+            !IsAncientCamp(camp)
+        ) {
             allCampList.push({ idx: camp.idx, cattr: camp });
         } else if (botLevel <= 11 && !IsEnemyCamp(camp) && !IsAncientCamp(camp)) {
             allCampList.push({ idx: camp.idx, cattr: camp });
@@ -365,7 +398,11 @@ export const GetClosestNeutralSpwan = function (bot: Unit, availableCampList: an
         let dist = GetUnitToLocationDistance(bot, camp.cattr.location);
         if (IsEnemyCamp(camp)) dist *= 1.5;
 
-        if (IsTheClosestOne(bot, camp.cattr.location) && dist < minDist && (bot.GetLevel() >= 10 || !IsAncientCamp(camp))) {
+        if (
+            IsTheClosestOne(bot, camp.cattr.location) &&
+            dist < minDist &&
+            (bot.GetLevel() >= 10 || !IsAncientCamp(camp))
+        ) {
             minDist = dist;
             closestCamp = camp;
         }
@@ -451,7 +488,12 @@ export const FindFarmNeutralTarget = function (creepList: Unit[]): Unit | null {
         }
     }
 
-    if (HasItem(bot, "item_bfury") || HasItem(bot, "item_maelstrom") || HasItem(bot, "item_mjollnir") || HasItem(bot, "item_radiance")) {
+    if (
+        HasItem(bot, "item_bfury") ||
+        HasItem(bot, "item_maelstrom") ||
+        HasItem(bot, "item_mjollnir") ||
+        HasItem(bot, "item_radiance")
+    ) {
         targetCreep = GetMaxHPCreep(creepList);
     }
 
@@ -485,7 +527,11 @@ export const ConsiderFarmNeutralType = {
         const farmAbility = bot.GetAbilityByName("tidehunter_anchor_smash");
         const ultimateAbility = bot.GetAbilityByName("tidehunter_ravage");
 
-        if (farmAbility.IsTrained() && ultimateAbility.IsTrained() && bot.GetMana() > ultimateAbility.GetManaCost() + 200) {
+        if (
+            farmAbility.IsTrained() &&
+            ultimateAbility.IsTrained() &&
+            bot.GetMana() > ultimateAbility.GetManaCost() + 200
+        ) {
             return "maxHP";
         }
 
@@ -532,7 +578,13 @@ export const IsModeSuitableToFarm = function (bot: Unit): boolean {
     const mode = bot.GetActiveMode();
     const botLevel = bot.GetLevel();
 
-    if (botLevel <= 8 && (mode === BotMode.PushTowerTop || mode === BotMode.PushTowerMid || mode === BotMode.PushTowerBot || mode === BotMode.Laning)) {
+    if (
+        botLevel <= 8 &&
+        (mode === BotMode.PushTowerTop ||
+            mode === BotMode.PushTowerMid ||
+            mode === BotMode.PushTowerBot ||
+            mode === BotMode.Laning)
+    ) {
         const enemyAncient = GetAncient(GetOpposingTeam());
         if (GetUnitToUnitDistance(bot, enemyAncient) > 6300) {
             return false;
@@ -578,16 +630,30 @@ export const IsTimeToFarm = function (bot: Unit): boolean {
     const botName = bot.GetUnitName();
 
     // 防止单独无用的推进
-    if (bot.GetActiveMode() === BotMode.PushTowerTop || bot.GetActiveMode() === BotMode.PushTowerMid || bot.GetActiveMode() === BotMode.PushTowerBot) {
+    if (
+        bot.GetActiveMode() === BotMode.PushTowerTop ||
+        bot.GetActiveMode() === BotMode.PushTowerMid ||
+        bot.GetActiveMode() === BotMode.PushTowerBot
+    ) {
         const enemyAncient = GetAncient(GetOpposingTeam());
         const allyList = bot.GetNearbyHeroes(1400, false, BotMode.None);
         const enemyAncientDistance = GetUnitToUnitDistance(bot, enemyAncient);
-        if (enemyAncientDistance < 2800 && enemyAncientDistance > 1400 && bot.GetActiveModeDesire() < BotModeDesire.High && allyList.length <= 1) {
+        if (
+            enemyAncientDistance < 2800 &&
+            enemyAncientDistance > 1400 &&
+            bot.GetActiveModeDesire() < BotModeDesire.High &&
+            allyList.length <= 1
+        ) {
             return true;
         }
 
         if (IsShouldFarmHero(bot)) {
-            if (bot.GetActiveModeDesire() < BotModeDesire.Moderate && enemyAncientDistance > 1600 && enemyAncientDistance < 5600 && allyList.length <= 1) {
+            if (
+                bot.GetActiveModeDesire() < BotModeDesire.Moderate &&
+                enemyAncientDistance > 1600 &&
+                enemyAncientDistance < 5600 &&
+                allyList.length <= 1
+            ) {
                 return true;
             }
         }
@@ -614,10 +680,17 @@ export const IsTimeToFarm = function (bot: Unit): boolean {
 };
 
 // --根据地点来刷新阵营
-export const UpdateAvailableCamp = function (bot: Unit, preferredCamp: any, availableCampList: any[]): LuaMultiReturn<[any[], any | null]> {
+export const UpdateAvailableCamp = function (
+    bot: Unit,
+    preferredCamp: any,
+    availableCampList: any[],
+): LuaMultiReturn<[any[], any | null]> {
     if (preferredCamp !== null) {
         for (let i = 0; i < availableCampList.length; i++) {
-            if (availableCampList[i].cattr.location === preferredCamp.cattr.location || GetUnitToLocationDistance(bot, availableCampList[i].cattr.location) < 500) {
+            if (
+                availableCampList[i].cattr.location === preferredCamp.cattr.location ||
+                GetUnitToLocationDistance(bot, availableCampList[i].cattr.location) < 500
+            ) {
                 availableCampList.splice(i, 1);
                 return $multi(availableCampList, null);
             }

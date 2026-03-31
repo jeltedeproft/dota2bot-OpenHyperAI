@@ -5,12 +5,13 @@ import puppeteer, { Browser } from "puppeteer";
 import * as cheerio from "cheerio";
 import { hero_name_table } from "./names";
 
-const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36";
+const USER_AGENT =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36";
 
 type Counters = Record<string, number>;
 
 const visibleToInternal: Record<string, string> = Object.fromEntries(
-    Object.entries(hero_name_table).map(([internal, data]) => [data.visibleName.toLowerCase(), internal])
+    Object.entries(hero_name_table).map(([internal, data]) => [data.visibleName.toLowerCase(), internal]),
 );
 
 async function withBrowser<T>(fn: (browser: Browser) => Promise<T>): Promise<T> {
@@ -74,7 +75,7 @@ async function getHeroCounters(heroUrlName: string, browser: Browser): Promise<C
 async function main() {
     const matchupDict: Record<string, Counters> = {};
 
-    await withBrowser(async browser => {
+    await withBrowser(async (browser) => {
         for (const [internalName, data] of Object.entries(hero_name_table)) {
             console.log(`Fetching counters for ${internalName}...`);
             try {
@@ -113,7 +114,7 @@ async function main() {
 }
 
 if (require.main === module) {
-    main().catch(e => {
+    main().catch((e) => {
         console.error("Fatal error:", e);
         process.exit(1);
     });

@@ -3,8 +3,8 @@ const ts = require("typescript");
 function customTransformer() {
     console.log("Custom transformer is running...");
 
-    return context => {
-        const visit = node => {
+    return (context) => {
+        const visit = (node) => {
             // Check if the node is a call expression and has at least one argument
             if (ts.isCallExpression(node) && node.arguments.length > 0) {
                 const argument = node.arguments[0];
@@ -18,7 +18,9 @@ function customTransformer() {
 
                         // Create a new string literal with the transformed path
                         const newStringLiteral = ts.factory.createStringLiteral(newPath);
-                        const updatedNode = ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [newStringLiteral]);
+                        const updatedNode = ts.factory.updateCallExpression(node, node.expression, node.typeArguments, [
+                            newStringLiteral,
+                        ]);
 
                         // Return the updated node to apply the transformation
                         return updatedNode;
@@ -30,7 +32,7 @@ function customTransformer() {
             return ts.visitEachChild(node, visit, context);
         };
 
-        return node => ts.visitNode(node, visit);
+        return (node) => ts.visitNode(node, visit);
     };
 }
 

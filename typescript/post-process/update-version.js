@@ -27,7 +27,7 @@ fs.readFile(versionFilePath, "utf8", (err, data) => {
     const updatedData = data.replace(/(\d{4}\/\d{2}\/\d{2})/, formattedDate);
 
     // Write the updated content back to version.ts
-    fs.writeFile(versionFilePath, updatedData, "utf8", err => {
+    fs.writeFile(versionFilePath, updatedData, "utf8", (err) => {
         if (err) {
             console.error(`Error writing file ${versionFilePath}:`, err);
         } else {

@@ -115,7 +115,11 @@ bot.stateTetheredHero = bot.stateTetheredHero;
 function ShouldUseOvercharge(ally: Unit) {
     const isAttacking = GameTime() - ally.GetLastAttackTime() < 0.33;
     const attackTarget = ally.GetAttackTarget();
-    return jmz.IsGoingOnSomeone(ally) || (attackTarget && attackTarget.GetTeam() === GetOpposingTeam() && isAttacking) || ally.GetNearbyCreeps(200, true).length > 2;
+    return (
+        jmz.IsGoingOnSomeone(ally) ||
+        (attackTarget && attackTarget.GetTeam() === GetOpposingTeam() && isAttacking) ||
+        ally.GetNearbyCreeps(200, true).length > 2
+    );
 }
 
 function considerTether(): LuaMultiReturn<[number, Unit | null]> {
@@ -151,7 +155,11 @@ function considerOvercharge(): number {
     if (!abilityOvercharge.IsFullyCastable()) {
         return BotActionDesire.None;
     }
-    if (bot.HasModifier("modifier_wisp_tether") && bot.stateTetheredHero !== null && ShouldUseOvercharge(bot.stateTetheredHero)) {
+    if (
+        bot.HasModifier("modifier_wisp_tether") &&
+        bot.stateTetheredHero !== null &&
+        ShouldUseOvercharge(bot.stateTetheredHero)
+    ) {
         return BotActionDesire.High;
     }
     return BotActionDesire.None;
@@ -168,7 +176,11 @@ function considerSpirits(): number {
 }
 
 function considerRelocate(): LuaMultiReturn<[number, Location | null]> {
-    if (bot.HasModifier("modifier_wisp_tether") && bot.stateTetheredHero !== null && (jmz.GetHP(bot.stateTetheredHero) <= 0.2 || jmz.GetHP(bot) <= 0.2)) {
+    if (
+        bot.HasModifier("modifier_wisp_tether") &&
+        bot.stateTetheredHero !== null &&
+        (jmz.GetHP(bot.stateTetheredHero) <= 0.2 || jmz.GetHP(bot) <= 0.2)
+    ) {
         const allyNearbyEnemies = bot.stateTetheredHero.GetNearbyHeroes(1200, true, BotMode.None);
         if (
             (allyNearbyEnemies.length >= 1 && jmz.GetHP(bot.stateTetheredHero) < jmz.GetHP(allyNearbyEnemies[0])) ||
@@ -184,7 +196,12 @@ function considerRelocate(): LuaMultiReturn<[number, Location | null]> {
     }
 
     for (const ally of GetUnitList(UnitType.AlliedHeroes)) {
-        if (IsValidHero(ally) && jmz.IsInTeamFight(ally, 1200) && GetUnitToUnitDistance(bot, ally) > 3000 && ally.WasRecentlyDamagedByAnyHero(2)) {
+        if (
+            IsValidHero(ally) &&
+            jmz.IsInTeamFight(ally, 1200) &&
+            GetUnitToUnitDistance(bot, ally) > 3000 &&
+            ally.WasRecentlyDamagedByAnyHero(2)
+        ) {
             return $multi(BotActionDesire.High, ally.GetLocation());
         }
     }

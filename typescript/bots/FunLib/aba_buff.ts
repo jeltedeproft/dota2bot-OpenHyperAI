@@ -16,7 +16,11 @@ export const enemy_is_immune = [
     //"modifier_oracle_fates_edict"
 ];
 
-export const enemy_is_undead = ["modifier_dazzle_shallow_grave", "modifier_oracle_false_promise_timer", "modifier_abaddon_borrowed_time"];
+export const enemy_is_undead = [
+    "modifier_dazzle_shallow_grave",
+    "modifier_oracle_false_promise_timer",
+    "modifier_abaddon_borrowed_time",
+];
 export const enemy_not_illusion = [
     "modifier_item_satanic_unholy",
     "modifier_item_mask_of_madness_berserk",
@@ -51,4 +55,8 @@ export const hero_is_healing = [
     "modifier_bottle_regeneration",
 ];
 
-export const hero_not_invisible = ["modifier_item_dustofappearance", "modifier_sniper_assassinate", "modifier_bounty_hunter_track"];
+export const hero_not_invisible = [
+    "modifier_item_dustofappearance",
+    "modifier_sniper_assassinate",
+    "modifier_bounty_hunter_track",
+];

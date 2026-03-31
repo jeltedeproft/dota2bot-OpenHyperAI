@@ -13,6 +13,13 @@
 
 const { execSync, spawnSync } = require('child_process');
 const path = require('path');
+const fs = require('fs');
+
+// Fail fast with a helpful message if dependencies aren't installed.
+if (!fs.existsSync(path.join('node_modules', '.bin', 'prettier'))) {
+    console.error('[pre-commit] node_modules not found. Run: npm install');
+    process.exit(1);
+}
 
 function run(cmd, opts = {}) {
     return spawnSync(cmd[0], cmd.slice(1), {

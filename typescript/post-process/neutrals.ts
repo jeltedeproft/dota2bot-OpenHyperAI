@@ -14,7 +14,8 @@ interface ItemsData {
 }
 
 const DOTABUFF_PATCH_QUERY = "patch_7.39";
-const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36";
+const USER_AGENT =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36";
 
 async function withBrowser<T>(fn: (browser: Browser) => Promise<T>): Promise<T> {
     const browser = await puppeteer.launch({
@@ -62,7 +63,15 @@ function parseItemsTable(html: string): ItemsData | null {
             if (!Number.isFinite(matches)) continue;
 
             // Try neutral then enhancement
-            const sources: Array<[Record<number, Record<string, { visibleName: string } | { visibleName: string; tier_unique: number }>>, "neutral" | "enhancement"]> = [
+            const sources: Array<
+                [
+                    Record<
+                        number,
+                        Record<string, { visibleName: string } | { visibleName: string; tier_unique: number }>
+                    >,
+                    "neutral" | "enhancement",
+                ]
+            > = [
                 [neutral_name_table, "neutral"],
                 [enhancement_name_table, "enhancement"],
             ];
@@ -169,7 +178,7 @@ async function getHeroItems(heroUrlName: string, browser: Browser): Promise<Item
 async function main() {
     const itemsDict: Record<string, ItemsData> = {};
 
-    await withBrowser(async browser => {
+    await withBrowser(async (browser) => {
         // simple linear loop (you can parallelize with care for rate limits)
         for (const [internalName, data] of Object.entries(hero_name_table)) {
             console.log(`Fetching items for ${internalName}...`);
@@ -189,7 +198,7 @@ async function main() {
     // Write Lua (mirrors Python)
     const outPath = path.resolve(
         __dirname, // typescript/post-process
-        "../../bots/FretBots/neutrals_data.lua"
+        "../../bots/FretBots/neutrals_data.lua",
     );
 
     const lines: string[] = [];
@@ -219,7 +228,7 @@ async function main() {
 
 if (require.main === module) {
     // Run as script
-    main().catch(e => {
+    main().catch((e) => {
         console.error("Fatal error:", e);
         process.exit(1);
     });

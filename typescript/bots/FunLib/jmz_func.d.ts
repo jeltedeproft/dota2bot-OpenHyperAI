@@ -58,7 +58,12 @@ declare function GetEnemiesAroundAncient(bot: Unit, radius: number | null): numb
 
 declare function GetProperTarget(bot: Unit): Unit;
 
-declare function IsPingCloseToValidTower(team: Team, ping: Ping, radius: number, duration: number): LuaMultiReturn<[false, null] | [true, Lane]>;
+declare function IsPingCloseToValidTower(
+    team: Team,
+    ping: Ping,
+    radius: number,
+    duration: number,
+): LuaMultiReturn<[false, null] | [true, Lane]>;
 
 declare function GetNumOfAliveHeroes(isEnemy: boolean): number;
 

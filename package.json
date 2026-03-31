@@ -9,11 +9,11 @@
         "@types/node": "^22.10.3",
         "lua-types": "^2.13.1",
         "prettier": "^3.3.3",
-        "typescript": "^5.5.4",
+        "typescript": "5.5.2",
         "typescript-to-lua": "^1.26.2"
     },
     "scripts": {
-        "build:lua": "tstl -p tsconfig-tstl.json && node ./typescript/post-process/post-process-lua.js",
+        "build:lua": "node node_modules/typescript-to-lua/dist/tstl.js -p tsconfig-tstl.json && node ./typescript/post-process/post-process-lua.js",
         "build:node": "tsc -p tsconfig-node.json",
         "build": "npm run build:lua",
         "dev": "tstl -p tsconfig-tstl.json --watch",

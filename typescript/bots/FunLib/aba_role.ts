@@ -73,9 +73,15 @@ export const GetCurrentSuitableRole = function (bot: Unit, hero: HeroName) {
         return "support";
     } else if (CanBeMidlaner(hero) && lane === Lane.Mid) {
         return "midlaner";
-    } else if (CanBeSafeLaneCarry(hero) && ((GetTeam() === Team.Radiant && lane === Lane.Bot) || (GetTeam() === Team.Dire && lane === Lane.Top))) {
+    } else if (
+        CanBeSafeLaneCarry(hero) &&
+        ((GetTeam() === Team.Radiant && lane === Lane.Bot) || (GetTeam() === Team.Dire && lane === Lane.Top))
+    ) {
         return "carry";
-    } else if (CanBeOfflaner(hero) && ((GetTeam() === Team.Radiant && lane === Lane.Top) || (GetTeam() === Team.Dire && lane === Lane.Bot))) {
+    } else if (
+        CanBeOfflaner(hero) &&
+        ((GetTeam() === Team.Radiant && lane === Lane.Top) || (GetTeam() === Team.Dire && lane === Lane.Bot))
+    ) {
         return "offlaner";
     } else {
         return "unknown";
@@ -325,7 +331,14 @@ export const GetPositionForCM = function (bot: Unit) {
 
     if (role == null) {
         role = 1;
-        print("[ERROR] Failed to determine role for bot " + heroName + " in CM. It got assigned lane#: " + lane + ". Set it to pos: " + role.toString());
+        print(
+            "[ERROR] Failed to determine role for bot " +
+                heroName +
+                " in CM. It got assigned lane#: " +
+                lane +
+                ". Set it to pos: " +
+                role.toString(),
+        );
     }
 
     return role;
@@ -391,7 +404,14 @@ export const GetPosition = function (bot: Unit) {
             HeroPositions[playerId] = GetRoleFromId(bot);
         }
         role = HeroPositions[playerId] != null ? HeroPositions[playerId] : GetPositionForCM(bot);
-        print("[ERROR] Failed to match bot role for bot: " + unitName + ", PlayerID: " + playerId + ", set it to play pos: " + role);
+        print(
+            "[ERROR] Failed to match bot role for bot: " +
+                unitName +
+                ", PlayerID: " +
+                playerId +
+                ", set it to play pos: " +
+                role,
+        );
         print("Stack Trace:", debug.traceback());
         bot.assignedRole = role;
     }

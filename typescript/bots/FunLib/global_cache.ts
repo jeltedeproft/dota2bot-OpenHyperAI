@@ -122,9 +122,9 @@ export function getGlobalUnitState(): GlobalUnitState {
         lastUpdate: now,
         enemyBuildings: GetUnitList(UnitType.EnemyBuildings),
         alliedHeroes: GetUnitList(UnitType.AlliedHeroes),
-        enemyHeroes: GetUnitList(UnitType.Enemies).filter(u => jmz.IsValidHero(u)),
+        enemyHeroes: GetUnitList(UnitType.Enemies).filter((u) => jmz.IsValidHero(u)),
         alliedCreeps: GetUnitList(UnitType.AlliedCreeps),
-        enemyCreeps: GetUnitList(UnitType.Enemies).filter(u => u.IsCreep() || u.IsAncientCreep()),
+        enemyCreeps: GetUnitList(UnitType.Enemies).filter((u) => u.IsCreep() || u.IsAncientCreep()),
     };
 
     return globalUnitStateCache;
@@ -188,7 +188,7 @@ export function cleanupGlobalCache(): void {
     const now = DotaTime();
     const maxAge = 10; // 10 seconds max age
 
-    Object.keys(globalCache).forEach(key => {
+    Object.keys(globalCache).forEach((key) => {
         if (now - globalCache[key].lastUpdate > maxAge) {
             delete globalCache[key];
         }
@@ -199,7 +199,7 @@ export function cleanupGlobalCache(): void {
  * Clear all caches (useful for testing or when game state changes significantly)
  */
 export function clearAllCaches(): void {
-    Object.keys(globalCache).forEach(key => {
+    Object.keys(globalCache).forEach((key) => {
         delete globalCache[key];
     });
     globalGameStateCache = null;

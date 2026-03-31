@@ -69,7 +69,11 @@ export function CaptainModeLogic(SupportedHeroes: HeroName[]) {
     } else if (state >= HeroPickState.CmBan1 && state <= 20 && GetCMPhaseTimeRemaining() <= NeededTime) {
         BansHero();
         NeededTime = 0;
-    } else if (state >= HeroPickState.CmSelect1 && state <= HeroPickState.CmSelect10 && GetCMPhaseTimeRemaining() <= NeededTime) {
+    } else if (
+        state >= HeroPickState.CmSelect1 &&
+        state <= HeroPickState.CmSelect10 &&
+        GetCMPhaseTimeRemaining() <= NeededTime
+    ) {
         PicksHero();
         NeededTime = 0;
     } else if (state === HeroPickState.CmPick) {
@@ -199,7 +203,12 @@ function IsUnavailableHero(name: string): boolean {
 // Random hero which is non picked, non banned, or non human picked heroes if the human is the captain
 function RandomHero(): HeroName {
     let hero = allBotHeroes[RandomInt(1, allBotHeroes.length) - 1];
-    while (IsUnavailableHero(hero) || IsCMPickedHero(GetTeam(), hero) || IsCMPickedHero(GetOpposingTeam(), hero) || IsCMBannedHero(hero)) {
+    while (
+        IsUnavailableHero(hero) ||
+        IsCMPickedHero(GetTeam(), hero) ||
+        IsCMPickedHero(GetOpposingTeam(), hero) ||
+        IsCMBannedHero(hero)
+    ) {
         hero = allBotHeroes[RandomInt(1, allBotHeroes.length) - 1];
     }
     return hero;

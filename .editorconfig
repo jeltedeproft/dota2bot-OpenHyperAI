@@ -1,0 +1,37 @@
+# EditorConfig — https://editorconfig.org
+# Helps editors apply consistent style across all file types.
+
+root = true
+
+# ── Default ──────────────────────────────────────────────────────────────────
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# ── TypeScript / JavaScript ───────────────────────────────────────────────────
+# Enforced at CI by Prettier (see .prettierrc).
+[*.{ts,js,cjs,mjs}]
+indent_style = space
+indent_size = 4
+
+# ── Lua ───────────────────────────────────────────────────────────────────────
+# No automated formatter is available for Lua (Prettier has no Lua parser).
+# Conventions observed across the codebase:
+#   • Tabs for indentation (hero files, FunLib)
+#   • Double quotes for item name strings: "item_black_king_bar"
+#   • Single quotes in FunLib/utility files: 'modifier_name'
+#   • Max line length: no hard limit; keep ability-logic lines readable (~120 chars)
+[*.lua]
+indent_style = tab
+indent_size = 4
+
+# ── JSON / YAML ───────────────────────────────────────────────────────────────
+[*.{json,yml,yaml}]
+indent_style = space
+indent_size = 4
+
+# ── Markdown ──────────────────────────────────────────────────────────────────
+[*.md]
+trim_trailing_whitespace = false

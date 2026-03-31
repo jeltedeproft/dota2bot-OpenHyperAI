@@ -2,7 +2,7 @@ import { writeFileSync } from "fs";
 
 // Simple sleep helper (in milliseconds)
 function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 const GAP_BETWEEN_API_CALLS = 300; // add a gap (ms) to work as client side throttling.

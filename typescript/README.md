@@ -4,8 +4,8 @@ Future development work for this script will be written in ts as possible. In lo
 
 Starting from here, please use typescript to write the bot logic in ts and build to generate the relative lua files.
 
--   More about "Write Lua with TypeScript": https://typescripttolua.github.io/
--   More about Typescript: https://www.typescriptlang.org/
+- More about "Write Lua with TypeScript": https://typescripttolua.github.io/
+- More about Typescript: https://www.typescriptlang.org/
 
 ### Developer notes
 

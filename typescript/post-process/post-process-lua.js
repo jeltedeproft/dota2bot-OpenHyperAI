@@ -58,7 +58,7 @@ function replacePathsInFile(filePath) {
 
         // Write the updated content back to the file if changes were made
         if (hasChanges) {
-            fs.writeFile(filePath, updatedData, "utf8", err => {
+            fs.writeFile(filePath, updatedData, "utf8", (err) => {
                 if (err) {
                     console.error(`Error writing file ${filePath}:`, err);
                 } else {
@@ -79,7 +79,7 @@ function processDirectory(directory) {
             return;
         }
 
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             const entryPath = path.join(directory, entry.name);
 
             if (entry.isDirectory()) {

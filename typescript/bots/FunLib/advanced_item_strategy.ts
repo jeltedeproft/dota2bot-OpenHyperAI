@@ -343,7 +343,12 @@ function getRoleBasedItems(heroName: HeroName, _position: Position): string[] {
 function hasEnemyThreat(enemies: HeroName[], threatType: string): boolean {
     for (const enemy of enemies) {
         if (threatType === "evasion") {
-            if (enemy === HeroName.PhantomAssassin || enemy === HeroName.Windrunner || enemy === HeroName.Weaver || enemy === HeroName.Brewmaster) {
+            if (
+                enemy === HeroName.PhantomAssassin ||
+                enemy === HeroName.Windrunner ||
+                enemy === HeroName.Weaver ||
+                enemy === HeroName.Brewmaster
+            ) {
                 return true;
             }
         } else if (threatType === "magic_heavy") {
@@ -352,11 +357,21 @@ function hasEnemyThreat(enemies: HeroName[], threatType: string): boolean {
                 return true;
             }
         } else if (threatType === "illusion_heavy") {
-            if (enemy === HeroName.PhantomLancer || enemy === HeroName.ChaosKnight || enemy === HeroName.Terrorblade || enemy === HeroName.NagaSiren) {
+            if (
+                enemy === HeroName.PhantomLancer ||
+                enemy === HeroName.ChaosKnight ||
+                enemy === HeroName.Terrorblade ||
+                enemy === HeroName.NagaSiren
+            ) {
                 return true;
             }
         } else if (threatType === "invisibility") {
-            if (enemy === HeroName.Riki || enemy === HeroName.BountyHunter || enemy === HeroName.Clinkz || enemy === HeroName.NyxAssassin) {
+            if (
+                enemy === HeroName.Riki ||
+                enemy === HeroName.BountyHunter ||
+                enemy === HeroName.Clinkz ||
+                enemy === HeroName.NyxAssassin
+            ) {
                 return true;
             }
         }
