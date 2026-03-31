@@ -17,6 +17,7 @@ Last verified against: **Patch 7.41a** (March 2026)
 7. [Item Active-Use System](#7-item-active-use-system)
 8. [Bot Behavior Modes](#8-bot-behavior-modes)
 9. [FretBots (Enhanced Difficulty)](#9-fretbots-enhanced-difficulty)
+   - [Regenerating Generated Data Files](#regenerating-generated-data-files)
 10. [Customization System](#10-customization-system)
 11. [Patch Update Checklist](#11-patch-update-checklist)
 12. [External Data Sources](#12-external-data-sources)
@@ -337,8 +338,92 @@ FretBots mode gives bots unfair advantages (extra gold, XP, stats) for challengi
 Key files:
 - `FretBots/SettingsDefault.lua` -- Bonus values (gold, XP multipliers)
 - `FretBots/HeroNames.lua` -- Hero name localizations for chat
-- `FretBots/matchups_data.lua` -- Hero matchup database (14876 lines)
+- `FretBots/matchups_data.lua` -- Hero counter-advantage database (scraped from Dotabuff)
+- `FretBots/static_neutrals_matchup.lua` -- Per-hero neutral item usage rates (from Stratz API)
 - `FretBots/NeutralItems.lua` -- Item distribution with timing/difficulty scaling
+
+### Regenerating Generated Data Files
+
+Two FretBots data files are produced by post-process scripts. They are checked in so the repo works without re-running the scripts, but should be refreshed periodically (e.g. after a major patch).
+
+#### `matchups_data.lua` — Hero Counter Advantages
+
+**Source:** `typescript/post-process/matchups.ts`
+**Data source:** Dotabuff (past-12-months filter, Divine/Immortal bracket implied by the page defaults)
+**Output:** `bots/FretBots/matchups_data.lua`
+**Format:**
+```lua
+local heroList = {
+    ['npc_dota_hero_abaddon'] = {
+        ['npc_dota_hero_dark_seer'] = 3.93,   -- advantage % that dark_seer has vs abaddon
+        ...
+    },
+    ...
+}
+return heroList
+```
+
+The advantage value is the win-rate delta (positive = the key hero counters the subject).
+
+**How to regenerate:**
+```bash
+npm run matchups
+```
+This runs `npm run build:node` (compiles TS → JS in `dist/`) then executes `node ./dist/post-process/matchups.js`.
+
+The script:
+1. Launches a headless Chromium browser via Puppeteer
+2. Iterates every hero in `typescript/post-process/names.ts` (maps internal name → Dotabuff URL slug)
+3. Fetches `https://www.dotabuff.com/heroes/{slug}/counters?date=year` for each hero
+4. Parses the `table.sortable` HTML table with Cheerio
+5. Writes the combined result to `bots/FretBots/matchups_data.lua`
+
+**When to run:** After a major patch when hero win rates have shifted significantly (every 1–2 patches).
+
+**Prerequisites:** `npm install` (Puppeteer downloads Chromium automatically on first install).
+
+---
+
+#### `static_neutrals_matchup.lua` — Per-Hero Neutral Item Pick Rates
+
+**Source:** `typescript/post-process/static-neutrals-matchup.ts`
+**Data source:** [Stratz GraphQL API](https://stratz.com/api) (`heroStats.itemNeutral`, Divine+Immortal bracket, past week)
+**Output:** `bots/FretBots/static_neutrals_matchup.lua`
+**Format:**
+```lua
+local hHeroNeutralsMatchup = {
+  ['npc_dota_hero_abaddon'] = {
+    ['1'] = {['item_arcane_ring']=45.21, ['item_broom_handle']=23.10, ...},
+    ['2'] = {...},
+    ...
+  },
+  ...
+}
+return hHeroNeutralsMatchup
+```
+
+Each tier key (`'1'`–`'5'`) lists neutral items sorted by equipped-match-count, stored as a percentage of total tier usage.
+
+**How to regenerate:**
+```bash
+export STRATZ_API_KEY=your_token_here   # Windows: set STRATZ_API_KEY=...
+npm run update-ne
+```
+This runs `npm run build:node` then executes `node ./dist/post-process/static-neutrals-matchup.js`.
+
+**Prerequisites:**
+- A free Stratz API token from [stratz.com/api](https://stratz.com/api) — set as `STRATZ_API_KEY` environment variable.
+- The script throttles requests at 300 ms per hero to stay within API rate limits.
+
+**When to run:** After a patch that changes the neutral item pool (new items, tier shuffles). Running it more often is harmless.
+
+---
+
+#### `typescript/bots/FunLib/aba_matchups.ts` — Curated Synergy/Counter Lists
+
+This is a separate, hand-maintained file (not auto-generated). It stores manually curated `{ synergy, counter }` hero lists and is compiled to `bots/FunLib/aba_matchups.lua` via the normal `npm run build` step.
+
+Edit the TypeScript source at `typescript/bots/FunLib/aba_matchups.ts` directly — **never edit `bots/FunLib/aba_matchups.lua` by hand**.
 
 ---
 
